@@ -10,41 +10,6 @@ def make_result(board, last_number):
     return result_sum * last_number
 
 
-def is_pingo(board, y, z, check_into_direction, deep):
-    if (0 <= y <= 4) and (0 <= z <= 4):
-        is_set = board[y][z] == -1
-        if is_set:
-            deep += 1
-            if check_into_direction == 'u':
-                result = is_pingo(board, y - 1, z, check_into_direction, deep)
-                return result[0], result[1]
-            elif check_into_direction == 'd':
-                result = is_pingo(board, y + 1, z, check_into_direction, deep)
-                return result[0], result[1]
-            elif check_into_direction == 'l':
-                result = is_pingo(board, y, z - 1, check_into_direction, deep)
-                return result[0], result[1]
-            elif check_into_direction == 'r':
-                result = is_pingo(board, y, z + 1, check_into_direction, deep)
-                return result[0], result[1]
-            elif check_into_direction == 'dtl':
-                result = is_pingo(board, y - 1, z - 1, check_into_direction, deep)
-                return result[0], result[1]
-            elif check_into_direction == 'ddr':
-                result = is_pingo(board, y + 1, z + 1, check_into_direction, deep)
-                return result[0], result[1]
-            elif check_into_direction == 'dtr':
-                result = is_pingo(board, y - 1, z - 1, check_into_direction, deep)
-                return result[0], result[1]
-            elif check_into_direction == 'ddl':
-                result = is_pingo(board, y + 1, z + 1, check_into_direction, deep)
-                return result[0], result[1]
-        else:
-            return is_set, deep
-    else:
-        return True, deep
-
-
 def init_boards():
     f = open("input.txt", "r")
     number_draw_order = list(map(int, f.readline().split(',')))
@@ -52,7 +17,7 @@ def init_boards():
     all_lines = f.readlines()
 
     # init
-    all_pingo_boards = np.zeros((int(len(all_lines) / 6) + 1, 5, 5))
+    all_pingo_boards = np.zeros((len(all_lines) // 6 + 1, 5, 5))
     x = 0
     y = 0
     z = 0
@@ -89,21 +54,12 @@ def find_first_winner():
                     if number == drawn_number:
                         all_pingo_boards[x][y][z] = -1
                         # check if someone has pingo
-                        result1 = is_pingo(board, y, z, 'u', 0)
-                        result2 = is_pingo(board, y, z, 'd', 0)
-                        if result1[0] and result2[0] and result1[1] + result2[1] == 6:
+                        if sum(all_pingo_boards[x][y]) == -5:
                             return make_result(board, number)
-                        result1 = is_pingo(board, y, z, 'l', 0)
-                        result2 = is_pingo(board, y, z, 'r', 0)
-                        if result1[0] and result2[0] and result1[1] + result2[1] == 6:
-                            return make_result(all_pingo_boards[x], number)
-                        result1 = is_pingo(board, y, z, 'dtl', 0)
-                        result2 = is_pingo(board, y, z, 'ddr', 0)
-                        if result1[0] and result2[0] and result1[1] + result2[1] == 6:
-                            return make_result(board, number)
-                        result1 = is_pingo(board, y, z, 'dtr', 0)
-                        result2 = is_pingo(board, y, z, 'ddl', 0)
-                        if result1[0] and result2[0] and result1[1] + result2[1] == 6:
+                        column_sum = 0
+                        for check_line in board:
+                            column_sum += check_line[z]
+                        if column_sum == -5:
                             return make_result(board, number)
                 z = -1
             y = -1
@@ -114,6 +70,7 @@ def board_is_finished(all_pingo_boards, x):
     for y in range(5):
         for z in range(5):
             all_pingo_boards[x][y][z] = -2
+
 
 def find_last_winner():
     result = init_boards()
@@ -133,24 +90,13 @@ def find_last_winner():
                     if number == drawn_number:
                         all_pingo_boards[x][y][z] = -1
                         # check if someone has pingo
-                        result1 = is_pingo(board, y, z, 'u', 0)
-                        result2 = is_pingo(board, y, z, 'd', 0)
-                        if result1[0] and result2[0] and result1[1] + result2[1] == 6:
+                        if sum(all_pingo_boards[x][y]) == -5:
                             last_winner = make_result(board, number)
                             board_is_finished(all_pingo_boards, x)
-                        result1 = is_pingo(board, y, z, 'l', 0)
-                        result2 = is_pingo(board, y, z, 'r', 0)
-                        if result1[0] and result2[0] and result1[1] + result2[1] == 6:
-                            last_winner = make_result(board, number)
-                            board_is_finished(all_pingo_boards, x)
-                        result1 = is_pingo(board, y, z, 'dtl', 0)
-                        result2 = is_pingo(board, y, z, 'ddr', 0)
-                        if result1[0] and result2[0] and result1[1] + result2[1] == 6:
-                            last_winner = make_result(board, number)
-                            board_is_finished(all_pingo_boards, x)
-                        result1 = is_pingo(board, y, z, 'dtr', 0)
-                        result2 = is_pingo(board, y, z, 'ddl', 0)
-                        if result1[0] and result2[0] and result1[1] + result2[1] == 6:
+                        column_sum = 0
+                        for check_line in board:
+                            column_sum += check_line[z]
+                        if column_sum == -5:
                             last_winner = make_result(board, number)
                             board_is_finished(all_pingo_boards, x)
                 z = -1
