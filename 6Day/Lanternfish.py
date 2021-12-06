@@ -25,6 +25,7 @@ def read_input():
     return list(map(int, f.readline().strip().split(",")))
 
 
+# slow and easy
 def evolution(lantern_evolution, days):
     for num in range(days):
         for i in range(len(lantern_evolution)):
@@ -73,31 +74,15 @@ def fast_evolution(lantern_evolution, days):
     return fish_sum
 
 
-
 def main():
-    start_time = time.process_time()
     current_evolution = read_input()
-    erg = evolution(current_evolution, 80)
-    end_time = time.process_time()
-    print(str(end_time - start_time) + "s for slow 80: " + str(erg))
+    print(str(evolution(current_evolution, 80)))
 
-    start_time = time.process_time()
     current_evolution = read_input()
-    erg = fast_evolution(current_evolution, 80)
-    end_time = time.process_time()
-    print(str(end_time - start_time) + "s for fast 80: " + str(erg))
+    print(str(fast_evolution(current_evolution, 80)))
 
-    start_time = time.process_time()
     current_evolution = read_input()
-    erg = fast_evolution(current_evolution, 256)
-    end_time = time.process_time()
-    print(str(end_time - start_time) + "s for fast 256: " + str(erg))
-
-    start_time = time.process_time()
-    current_evolution = read_input()
-    erg = fast_evolution(current_evolution, 10000)
-    end_time = time.process_time()
-    print(str(end_time - start_time) + "s for fast 10000: " + str(erg))
+    print(str(fast_evolution(current_evolution, 256)))
 
 
 if __name__ == "__main__":
