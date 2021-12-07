@@ -57,7 +57,7 @@ def find_overlap_count(clouds, min_overlaps):
     return count
 
 
-# debuging only
+# debugging only
 def print_clouds(clouds):
     for x in range(len(clouds)):
         for y in range(len(clouds[x])):
