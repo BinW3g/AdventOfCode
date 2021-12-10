@@ -58,6 +58,7 @@ def find_basin_count(array, x_pos, y_pos):
     except IndexError:
         return 0
 
+
 def find_basin_locations():
     level_array = read_input()
     basin_counts = list()
