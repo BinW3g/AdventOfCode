@@ -1,23 +1,68 @@
-import numpy as np
+def read_input():
+    f = open("input.txt", "r")
+    risk_field = []
+    for line in f.readlines():
+        char_field = []
+        for char in line.strip():
+            char_field.append(int(char))
+        risk_field.append(char_field)
+    return risk_field
 
 
-def sum_up(field, x, y, current_risk=0, path_risk=[]):
-    if len(field)-1 == x and len(field[0])-1 == y:
-        path_risk.append(current_risk)
-        return path_risk
-    current_risk += field[x][y]
-    print("Currently at: ", str(x), str(y))
-    if x != len(field)-1:
-        sum_up(field, x+1, y, current_risk, path_risk)
-    if y != len(field[0])-1:
-        sum_up(field, x, y+1, current_risk, path_risk)
-    return path_risk
+def make_5_times_bigger(field):
+    big_field = list()
+    for row_index in range(len(field)):
+        big_row = list()
+        for i in range(0, 5):
+            for number in field[row_index]:
+                if number + 1 * i > 9:
+                    big_row.append(number + 1 * i - 9)
+                else:
+                    big_row.append(number + 1 * i)
+        big_field.append(big_row)
+
+    for i in range(1, 5):
+        for row_index in range(len(field)):
+            big_row = list()
+            for number in big_field[row_index]:
+                if number + 1 * i > 9:
+                    big_row.append(number + 1 * i - 9)
+                else:
+                    big_row.append(number + 1 * i)
+            big_field.append(big_row)
+    return big_field
 
 
-def find_shortest_path():
-    field = np.genfromtxt("input.txt", dtype=int, delimiter=1)
-    return min(sum_up(field, 0, 0))
+def getMinCostField(cost):
+    min_field = [[0 for x in range(len(cost))] for x in range(len(cost[0]))]
+
+    for i in range(1, len(cost)):
+        min_field[i][0] = min_field[i - 1][0] + cost[i][0]
+
+    for j in range(1, len(cost[0])):
+        min_field[0][j] = min_field[0][j - 1] + cost[0][j]
+
+    for i in range(1, len(cost)):
+        for j in range(1, len(cost[0])):
+            min_field[i][j] = min(min_field[i - 1][j], min_field[i][j - 1]) + cost[i][j]
+    return min_field
+
+
+def find_shortest_path(is_big=False):
+    field = read_input()
+    if is_big:
+        field = make_5_times_bigger(field)
+    return getMinCostField(field)[len(field) - 1][len(field[0]) - 1]
+
+
+def print_array(array):
+    for line in array:
+        for value in line:
+            print(value, end="")
+        print()
+    print()
 
 
 if __name__ == "__main__":
     print(find_shortest_path())
+    print(find_shortest_path(True))
