@@ -1,26 +1,21 @@
 package Day1;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Scanner;
 
 public class Day1 {
 
-    public static int findCalibrationValue(String text){
+    public static int findCalibrationValue(String text) {
         int firstI = 0;
-        int lastI = text.length()-1;
+        int lastI = text.length() - 1;
 
         char firstDigit = ' ';
         char lastDigit = ' ';
 
-        while(firstI < text.length()){
-            if(firstDigit == ' ' && Character.isDigit(text.charAt(firstI)))
-                firstDigit = text.charAt(firstI);
-            if(lastDigit == ' ' && Character.isDigit(text.charAt(lastI)))
-                lastDigit = text.charAt(lastI);
-            if (Character.isDigit(firstDigit) && Character.isDigit(lastDigit))
-                break;
+        while (firstI < text.length()) {
+            if (firstDigit == ' ' && Character.isDigit(text.charAt(firstI))) firstDigit = text.charAt(firstI);
+            if (lastDigit == ' ' && Character.isDigit(text.charAt(lastI))) lastDigit = text.charAt(lastI);
+            if (Character.isDigit(firstDigit) && Character.isDigit(lastDigit)) break;
 
             firstI++;
             lastI--;
@@ -28,7 +23,7 @@ public class Day1 {
         return Integer.parseInt(firstDigit + "" + lastDigit);
     }
 
-    public static char checkIfNumber(String number){
+    public static char checkIfNumber(String number) {
         return switch (number) {
             case "zero" -> '0';
             case "one" -> '1';
@@ -43,16 +38,16 @@ public class Day1 {
             default -> ' ';
         };
     }
-    public static int findCorrectCalibrationValue(String text){
+
+    public static int findCorrectCalibrationValue(String text) {
         int firstI = 0;
-        int lastI = text.length()-1;
+        int lastI = text.length() - 1;
 
         char firstDigit = ' ';
         char lastDigit = ' ';
 
-        while(firstI < text.length()){
-            if (firstDigit == ' ' && Character.isDigit(text.charAt(firstI)))
-                firstDigit = text.charAt(firstI);
+        while (firstI < text.length()) {
+            if (firstDigit == ' ' && Character.isDigit(text.charAt(firstI))) firstDigit = text.charAt(firstI);
             else {
                 if (firstDigit == ' ' && firstI + 3 < text.length())
                     firstDigit = checkIfNumber(text.substring(firstI, firstI + 3));
@@ -64,16 +59,12 @@ public class Day1 {
             if (lastDigit == ' ' && Character.isDigit(text.charAt(lastI))) {
                 lastDigit = text.charAt(lastI);
             } else {
-                if (lastDigit == ' ' && lastI - 4 > 0)
-                    lastDigit = checkIfNumber(text.substring(lastI - 4, lastI+1));
-                if (lastDigit == ' ' && lastI - 3 > 0)
-                    lastDigit = checkIfNumber(text.substring(lastI - 3, lastI+1));
-                if (lastDigit == ' ' && lastI - 2 > 0)
-                    lastDigit = checkIfNumber(text.substring(lastI - 2, lastI+1));
+                if (lastDigit == ' ' && lastI - 4 > 0) lastDigit = checkIfNumber(text.substring(lastI - 4, lastI + 1));
+                if (lastDigit == ' ' && lastI - 3 > 0) lastDigit = checkIfNumber(text.substring(lastI - 3, lastI + 1));
+                if (lastDigit == ' ' && lastI - 2 > 0) lastDigit = checkIfNumber(text.substring(lastI - 2, lastI + 1));
             }
 
-            if (Character.isDigit(firstDigit) && Character.isDigit(lastDigit))
-                break;
+            if (Character.isDigit(firstDigit) && Character.isDigit(lastDigit)) break;
 
             firstI++;
             lastI--;
@@ -81,7 +72,7 @@ public class Day1 {
         return Integer.parseInt(firstDigit + "" + lastDigit);
     }
 
-    public InputStream getFile(){
+    public InputStream getFile() {
         return this.getClass().getResourceAsStream("input.txt");
     }
 
@@ -90,9 +81,9 @@ public class Day1 {
         int correctSum = 0;
         Day1 d = new Day1();
         Scanner fileReader = new Scanner(d.getFile());
-        while(fileReader.hasNextLine()){
+        while (fileReader.hasNextLine()) {
             String line = fileReader.nextLine();
-//            wrongSum += findCalibrationValue(line);
+            wrongSum += findCalibrationValue(line);
             correctSum += findCorrectCalibrationValue(line);
         }
         System.out.println("part 1: " + wrongSum);
