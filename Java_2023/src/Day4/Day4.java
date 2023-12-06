@@ -46,7 +46,7 @@ public class Day4 {
             }
             int currentCard = 1;
             if(!nextCopies.isEmpty())
-                currentCard = nextCopies.removeFirst();
+                currentCard = nextCopies.remove(0);
             for (int i = 0; i < winnings; i++) {
                 if(i >= nextCopies.size()){
                     nextCopies.add(1+currentCard);
