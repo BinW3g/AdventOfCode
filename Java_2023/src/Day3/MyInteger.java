@@ -15,6 +15,10 @@ public class MyInteger {
         this.integerValue = integerValue;
     }
 
+    public void incrementValue(int increment) {
+        integerValue += increment;
+    }
+
     @Override
     public String toString() {
         return integerValue + "";

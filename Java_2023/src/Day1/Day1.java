@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.util.Scanner;
 
 public class Day1 {
-
     public static int findCalibrationValue(String text) {
         int firstI = 0;
         int lastI = text.length() - 1;
