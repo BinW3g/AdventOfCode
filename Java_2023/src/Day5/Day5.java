@@ -6,19 +6,19 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Day5 {
-    public long part1_findLowestLocation(){
+    public long part1_findLowestLocation() {
         Scanner input = new Scanner(getClass().getResourceAsStream("input.txt"));
         String firstLine = input.nextLine();
         long[] seeds = Arrays.stream(firstLine.split(": ")[1].split(" ")).mapToLong(Long::parseLong).toArray();
         boolean[] hasChanged = new boolean[seeds.length];
 
-        while(input.hasNextLine()){
+        while (input.hasNextLine()) {
             String line = input.nextLine();
-            if(line.isEmpty()){
+            if (line.isEmpty()) {
                 hasChanged = new boolean[seeds.length];
                 continue;
             }
-            if(line.contains(":")){
+            if (line.contains(":")) {
                 continue;
             }
 
@@ -28,10 +28,10 @@ public class Day5 {
             long range = Long.parseLong(tokens[2]);
 
             for (int i = 0; i < seeds.length; i++) {
-                if(hasChanged[i]){
+                if (hasChanged[i]) {
                     continue;
                 }
-                if(seeds[i] >= sourceStart && seeds[i] < sourceStart+range){
+                if (seeds[i] >= sourceStart && seeds[i] < sourceStart + range) {
                     long dif = Math.abs(sourceStart - seeds[i]);
                     seeds[i] = destStart + dif;
                     hasChanged[i] = true;
@@ -41,29 +41,29 @@ public class Day5 {
         return Arrays.stream(seeds).min().getAsLong();
     }
 
-    public long part2_findLowestLocationSeedRangesStupidEdition(){
+    public long part2_findLowestLocationSeedRangesStupidEdition() {
         Scanner input = new Scanner(getClass().getResourceAsStream("input.txt"));
         String firstLine = input.nextLine();
         long[] seeds = Arrays.stream(firstLine.split(": ")[1].split(" ")).mapToLong(Long::parseLong).toArray();
         List<Long> seedsList = new ArrayList<>();
-        long counter =0;
-        for (int i = 0; i < seeds.length; i+=2) {
-            for (int j = 0; j < seeds[i+1]; j++) {
-                seedsList.add(seeds[i]+j);
-                counter ++;
-                if(counter%100000 == 0){
+        long counter = 0;
+        for (int i = 0; i < seeds.length; i += 2) {
+            for (int j = 0; j < seeds[i + 1]; j++) {
+                seedsList.add(seeds[i] + j);
+                counter++;
+                if (counter % 100000 == 0) {
                     System.out.println(seedsList.size());
                 }
             }
         }
         boolean[] hasChanged = new boolean[seedsList.size()];
-        while(input.hasNextLine()){
+        while (input.hasNextLine()) {
             String line = input.nextLine();
-            if(line.isEmpty()){
+            if (line.isEmpty()) {
                 hasChanged = new boolean[seedsList.size()];
                 continue;
             }
-            if(line.contains(":")){
+            if (line.contains(":")) {
                 continue;
             }
 
@@ -75,10 +75,10 @@ public class Day5 {
             int i = -1;
             for (long seed : seedsList) {
                 i++;
-                if(hasChanged[i]){
+                if (hasChanged[i]) {
                     continue;
                 }
-                if(seed >= sourceStart && seed < sourceStart+range){
+                if (seed >= sourceStart && seed < sourceStart + range) {
                     long dif = Math.abs(sourceStart - seed);
                     seedsList.set(i, destStart + dif);
                     hasChanged[i] = true;
@@ -88,16 +88,16 @@ public class Day5 {
         return seedsList.stream().mapToLong(v -> v).min().orElseThrow();
     }
 
-    public long part2_findLowestLocationSeedRanges(){
+    public long part2_findLowestLocationSeedRanges() {
         Scanner input = new Scanner(getClass().getResourceAsStream("input.txt"));
         String firstLine = input.nextLine();
         String[] stringSeeds = firstLine.split(": ")[1].split(" ");
         List<SeedRange> seeds = new ArrayList<>();
-        for (int i = 0; i < stringSeeds.length; i+=2) {
-            seeds.add(new SeedRange(stringSeeds[i], stringSeeds[i+1]));
+        for (int i = 0; i < stringSeeds.length; i += 2) {
+            seeds.add(new SeedRange(stringSeeds[i], stringSeeds[i + 1]));
         }
 
-        while(input.hasNextLine()) {
+        while (input.hasNextLine()) {
             String line = input.nextLine();
             if (line.isEmpty()) {
                 for (SeedRange seed : seeds) {
@@ -118,7 +118,7 @@ public class Day5 {
                 if (!seed.isAllowChange()) {
                     continue;
                 }
-                if(sourceStart > seed.getSeed()  &&  sourceStart <= seed.getSeed()+seed.getRange()){
+                if (sourceStart > seed.getSeed() && sourceStart <= seed.getSeed() + seed.getRange()) {
                     seeds.add(seed.splitSeedAt(sourceStart));
                 }
 
@@ -135,7 +135,7 @@ public class Day5 {
 
         long min = Long.MAX_VALUE;
         for (SeedRange seed : seeds) {
-            if (min > seed.getSeed()){
+            if (min > seed.getSeed()) {
                 min = seed.getSeed();
             }
         }
