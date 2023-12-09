@@ -1,4 +1,4 @@
-package Day3;
+package Day03;
 
 public class MyInteger {
     private int integerValue = 0;

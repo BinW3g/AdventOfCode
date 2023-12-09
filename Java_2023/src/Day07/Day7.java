@@ -1,6 +1,5 @@
-package Day7;
+package Day07;
 
-import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;

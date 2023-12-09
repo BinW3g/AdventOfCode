@@ -1,6 +1,5 @@
-package Day8;
+package Day08;
 
-import java.text.ParseException;
 import java.util.*;
 
 public class Day8 {

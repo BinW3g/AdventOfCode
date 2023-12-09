@@ -1,19 +1,17 @@
-package Day7;
+package Day07;
 
-import Day3.MyInteger;
+import Day03.MyInteger;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-public class PokerHands implements Comparable<PokerHands> {
+public class PokerHandsWithJokers implements Comparable<PokerHandsWithJokers> {
     protected String hand;
     protected int bid;
 
     private final int strength;
 
 
-    public PokerHands(String hand, String bid) {
+    public PokerHandsWithJokers(String hand, String bid) {
         this.hand = hand;
         this.bid = Integer.parseInt(bid);
         this.strength = findStrengthOfHand();
@@ -46,17 +44,29 @@ public class PokerHands implements Comparable<PokerHands> {
 
     private int findStrengthOfHand() {
         Map<Character, MyInteger> amount = new HashMap<>();
+        int countJokers = 0;
         for (char c : hand.toCharArray()) {
+            if (c == 'J') {
+                countJokers++;
+                continue;
+            }
             if (amount.containsKey(c)) {
                 amount.get(c).incrementValue(1);
             } else {
                 amount.put(c, new MyInteger(1));
             }
         }
+
         Set<Character> keys = amount.keySet();
-        if (keys.size() == 1) {
+        if (keys.size() == 1 || countJokers == 5) {
             return 6; //five of a kind
         }
+
+        for (int i = 0; i < countJokers; i++) {
+            char key = amount.entrySet().stream().max(Comparator.comparingInt(entry -> entry.getValue().getIntegerValue())).get().getKey();
+            amount.get(key).incrementValue(1);
+        }
+
         int count3 = 0;
         int count2 = 0;
         int count1 = 0;
@@ -98,7 +108,7 @@ public class PokerHands implements Comparable<PokerHands> {
         }
         return switch (c) {
             case 'T' -> 10;
-            case 'J' -> 11;
+            case 'J' -> 1;
             case 'Q' -> 12;
             case 'K' -> 13;
             case 'A' -> 14;
@@ -108,7 +118,7 @@ public class PokerHands implements Comparable<PokerHands> {
     }
 
     @Override
-    public int compareTo(PokerHands o) {
+    public int compareTo(PokerHandsWithJokers o) {
         if (o.strength != this.strength) {
             return this.strength - o.strength;
         }
