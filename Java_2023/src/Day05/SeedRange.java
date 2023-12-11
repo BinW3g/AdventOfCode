@@ -1,4 +1,4 @@
-package Day5;
+package Day05;
 
 public class SeedRange {
     private long seed;

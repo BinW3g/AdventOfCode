@@ -1,9 +1,8 @@
-package Day3;
+package Day03;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Stream;
 
 public class Day3 {
     public List<List<Object>> readInput() {
