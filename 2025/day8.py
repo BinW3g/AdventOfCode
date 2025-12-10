@@ -1,6 +1,20 @@
 import math
 import numpy as np
+from functools import cmp_to_key
 
+class Line:
+  def __init__(self, a, b):
+    self.a = a
+    self.b = b
+    self.distance = calcDistance(a, b)
+
+  def __str__(self):
+    return f"({self.a},{self.b})"
+
+  def connecting(self, other):
+    if self.a == other.a or self.b == other.b:
+      return True
+    return False
 
 def calcDistance(point1, point2):
   x = (point1[0]-point2[0])**2
@@ -9,31 +23,51 @@ def calcDistance(point1, point2):
 
   return math.sqrt(x + y + z)
 
-def isConnected(point1, point2, circuits):
-  for circuit in circuits:
-    if point1 in circuit and point2 in circuit:
-      return True
+def createsCircel(circuit, line: Line):
+  for i, l1 in enumerate(circuit):
+    for l2 in circuit[i+1:]:
+      if (line.a == l1.a and line.b == l2.b) or (line.a == l1.b and line.b == l2.a) :
+        return True
   return False
 
-def part1(junctions):
-  circuits = list()
-  for i in range(1000):
-    shortest = float('inf')
-    closest = list()
 
-    for j in range(len(junctions)):
-      for k in range(j+1, len(junctions)):
-        junction1 = junctions[j]
-        junction2 = junctions[k]
-        if calcDistance(junction1, junction2) < shortest \
-            and not isConnected(junction1, junction2, circuits):
-          shortest = calcDistance(junction1, junction2)
-          closest = [junction1, junction2]
 
-    circuits.append(closest)
+def part1(junctions, n):
+  lines = list()
+  for i, p1 in enumerate(junctions):
+    for p2 in junctions[i+1:]:
+      lines.append(Line(p1, p2))
+
+  lines.sort(key=lambda l: l.distance)
+
+  circuits = list(list())
+  i = 0
+  circuits_created = 0
+  while circuits_created < n:
+    line = lines[i]
+    inserted = False
+    canceled = False
+    for circuit in circuits:
+      for l in circuit:
+        if line.connecting(l):
+          if createsCircel(circuit, line):
+            canceled = True
+            circuits_created -= 1
+            break
+          circuit.append(line)
+          inserted = True
+          break
+      if inserted or canceled:
+        break
+    if not inserted:
+      circuits.append([line])
+    i += 1
+    circuits_created += 1
+
+
 
   sorted_circuits = sorted(circuits, key=lambda circuit: len(circuit), reverse=True)
-  return len(sorted_circuits[0]) * len(sorted_circuits[1]) * len(sorted_circuits[2])
+  return (len(sorted_circuits[0])+1) * (len(sorted_circuits[1])+1) * (len(sorted_circuits[2])+1)
 
 def part2():
   pass
@@ -47,5 +81,6 @@ if __name__ == '__main__':
     points.append(list(map(int, line.split(","))))
 
 
-  print(part1(points))
+  # print(part1(points, 10))
+  print(part1(points, 1000))
   print(part2())
